@@ -28,5 +28,26 @@ def scarp_page(url):
 news_obtained = scarp_page(news_url)
 # print(news_obtained)
 
+#tryna scrape the body
+def content_scraper(url):
+    try:
+        soup = BeautifulSoup(requests.get(url).text,'lxml')
+        content=soup.find('div',id="article-body")
+#         print(content)
+        n = len(content)
+        res = []
+        try:
+            for i in range(n):
+                res.append(content.find_all("p")[i].text)
+    #         res.append(content.find_all("p")[0].text)
+        except IndexError:
+            pass
+        return res
+    except Exception as e:
+        print(e)
 
-
+#pushim them into hashman for easy and efficient searching
+total_content = {}
+for link in range(len(news_obtained)):
+    df = content_scraper(news_obtained[link][1])
+    total_content[link] = df
